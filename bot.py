@@ -2,11 +2,11 @@ import discord
 from discord.ext import commands
 import json
 import os
+import keep_alive
 
 with open('setting.json', mode='r',encoding='utf8') as jfile:
     jdata = json.load(jfile)
-
-bot = commands.Bot(command_prefix='=')
+bot = commands.Bot(command_prefix='$')
 
 @bot.event
 async def on_ready():
@@ -27,9 +27,10 @@ async def nh(ctx,msg):
 
 for filename in os.listdir('./cmds'):
     if filename.endswith('.py'):
-        bot.load_extension(f'cmds.{filename[:-3]}')
+      bot.load_extension(f'cmds.{filename[:-3]}')
 
 if __name__ == "__main__":
-    bot.run(jdata['Token'])
+  keep_alive.keep_alive()
+  bot.run(jdata['Token'])
 
 
