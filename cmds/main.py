@@ -30,6 +30,12 @@ class Main(Cog_Extension):
 
     @commands.command()
     async def 語錄(self,ctx,msg):
+        if msg == 'list':
+            await ctx.send('These are quotes you can use:')
+            result = [(i+1,list(quote.keys())[i]) for i in range(len(quote))]
+            for item in result:
+                await ctx.send(f'{result[0]} : {result[1]}')
+            return 
         token = quote.get(msg)
         if token == None:
             return 
