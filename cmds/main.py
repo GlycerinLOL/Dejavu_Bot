@@ -27,6 +27,11 @@ class Main(Cog_Extension):
     async def 鯊鯊舞(self,ctx):
         pic = discord.File(jdata['shark_dancing'])
         await ctx.send(file=pic)
+    @commands.command()
+    async def nh(self,ctx,msg):
+        url = 'https://nhentai.net/g/'
+        channel = self.bot.get_channel(int(jdata['R18_channel']))
+        await channel.send(url+msg)
 
     @commands.command()
     async def 語錄(self,ctx,msg):

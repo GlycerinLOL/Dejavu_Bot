@@ -19,11 +19,6 @@ async def on_member_join(member):
 async def on_member_remove(member):
     channel = bot.get_channel(int(jdata['main_chat_channel']))
     await channel.send(f'{member} leave!')
-@bot.command()
-async def nh(ctx,msg):
-    url = 'https://nhentai.net/g/'
-    channel = bot.get_channel(int(jdata['R18_channel']))
-    await channel.send(url+msg)
 
 for filename in os.listdir('./cmds'):
     if filename.endswith('.py'):
