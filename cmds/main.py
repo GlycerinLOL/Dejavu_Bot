@@ -32,11 +32,13 @@ class Main(Cog_Extension):
     async def 語錄(self,ctx,msg):
         if msg == 'list':
             await ctx.send('These are quotes you can use:')
-            result = [(i+1,list(quote.keys())[i]) for i in range(len(quote))]
+            result = [(i+1,list(self.quote.keys())[i]) for i in range(len(self.quote))]
+            str = ''
             for item in result:
-                await ctx.send(f'{result[0]} : {result[1]}')
+              str += (f'{item[0]} : {item[1]}'+'\n')
+            await ctx.send(str)
             return 
-        token = quote.get(msg)
+        token = self.quote.get(msg)
         if token == None:
             return 
         else:
@@ -44,6 +46,9 @@ class Main(Cog_Extension):
             await ctx.message.delete()
             await ctx.send(f'{ctx.message.author} :')
             await ctx.send(file=pic)
+    @commands.command()
+    async def clear(self,ctx,num:int):
+        await ctx.channel.purge(limit=num+1)
 
 
 def setup(bot):

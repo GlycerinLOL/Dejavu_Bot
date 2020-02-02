@@ -31,6 +31,6 @@ for filename in os.listdir('./cmds'):
 
 if __name__ == "__main__":
   keep_alive.keep_alive()
-  bot.run(jdata['Token'])
+  bot.run(jdata['token'])
 
 
