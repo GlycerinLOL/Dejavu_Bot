@@ -8,7 +8,7 @@ import asyncio
 with open('setting.json', mode='r',encoding='utf8') as jfile:
     setting = json.load(jfile)
 
-client = commands.Bot(command_prefix=".",intents=discord.Intents.all())
+client = commands.Bot(command_prefix=";",intents=discord.Intents.all())
 client.owner_id = setting['owner_id']
 
 async def connect_nodes():
@@ -28,6 +28,7 @@ async def load_exts():
 async def on_wavelink_node_ready(node: wavelink.Node):
     """Event fired when a node has finished connecting."""
     print(f'Node: <{node.identifier}> is ready!')
+
 
 @client.event
 async def on_ready():

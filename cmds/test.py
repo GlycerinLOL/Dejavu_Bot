@@ -17,5 +17,12 @@ class test(commands.Cog):
     async def bot(self, ctx):
         await ctx.send("逼...逼...機油好難喝")
 
+    @commands.command()
+    async def embedTest(self, ctx):
+        embed=discord.Embed(title="Test", description="Test", color=0xfe0606)
+        embed.add_field(name="undefined", value="undefined", inline=False)
+        await ctx.send(embed=embed)
+
+        
 async def setup(bot):
     await bot.add_cog(test(bot))
