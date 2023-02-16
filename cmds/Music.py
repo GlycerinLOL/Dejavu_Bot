@@ -12,7 +12,7 @@ class Music(commands.Cog):
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-
+        
     @commands.Cog.listener()
     async def on_ready(self):
         print("Cogs: Music.py is loaded!")
@@ -58,11 +58,21 @@ class Music(commands.Cog):
 
             vc.queue.put(item=search)
             print(search.title, search.uri, ctx.author,vc.queue,"queue")
-            await ctx.send(f"Now queueing {search.title} by {ctx.author}")
+            videoID = search.uri.split("watch?v=")[1].split("&")[0]
+            embed=discord.Embed(title=search.title, url=search.uri, description=f"Queue {search.title} in {vc.channel}", color=0xfe0606)
+            embed.set_author(name=ctx.author,icon_url=ctx.author.avatar)
+            embed.set_image(url=f"https://img.youtube.com/vi/{videoID}/0.jpg")
+            embed.add_field(name="undefined", value="undefined", inline=False)
+            await ctx.send(embed=embed)
         else:
             await vc.play(search)
             print(vc.source.title, vc.source.uri, ctx.author,vc.queue,"play")
-            await ctx.send(f"Now playing {search.title} by {ctx.author}")
+            videoID = vc.source.uri.split("watch?v=")[1].split("&")[0]
+            embed=discord.Embed(title=vc.source.title, url=vc.source.uri, description=f"Playing {vc.source.title} in {vc.channel}", color=0xfe0606)
+            embed.set_author(name=ctx.author,icon_url=ctx.author.avatar)
+            embed.set_image(url=f"https://img.youtube.com/vi/{videoID}/0.jpg")
+            embed.add_field(name="undefined", value="undefined", inline=False)
+            await ctx.send(embed=embed)
 
 
     @commands.command()
@@ -93,9 +103,17 @@ class Music(commands.Cog):
     async def clear_queue(self, ctx):
         vc = ctx.voice_client
         if vc:
-            await vc.stop() 
             await ctx.send(f"Clear queue now: {vc.queue}")
             vc.queue.clear()
+            await vc.stop() 
+        else:
+            await ctx.send("Error: Bot is not in any voice chat")
+
+    @commands.command()
+    async def stop(self, ctx):
+        vc = ctx.voice_client
+        if vc:
+            await vc.stop() 
         else:
             await ctx.send("Error: Bot is not in any voice chat")
 
@@ -123,6 +141,7 @@ class Music(commands.Cog):
 
     @play.error
     async def play_error(self, ctx, error):
+        print(error)
         if isinstance(error, commands.BadArgument):
             await ctx.send("Could not find a track.")
         else:
