@@ -3,7 +3,7 @@
 Work In Progress
 
 ## Feature
-Voice channel music streaming
+Voice channel music streaming,
 Sending message & image(include GIFs)
 ## Command
 ###
