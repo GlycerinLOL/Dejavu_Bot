@@ -71,6 +71,7 @@ class Music(commands.Cog):
             if vc.queue.is_empty:
                 return await vc.stop()
             
+            print(vc.track.length)
             await vc.seek(vc.track.length*1000)
             if vc.is_paused():
                 await vc.resume()
