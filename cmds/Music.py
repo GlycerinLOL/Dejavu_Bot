@@ -18,10 +18,13 @@ class Music(commands.Cog):
         print("Cogs: Music.py is loaded!")
 
     @commands.Cog.listener()
-    async def on_wavelink_track_end(player: CustomPlayer, track: wavelink.Track, reason):
+    async def on_wavelink_track_end(self, player: CustomPlayer, track: wavelink.Track, reason):
+        print("current track end")
         if not player.queue.is_empty:
-            next_track = player.queue.get()
+            next_track = player.queue.pop()
             await player.play(next_track)
+        else:
+            print("queue is empty")
 
     @commands.command()
     async def connect(self, ctx):
@@ -90,6 +93,7 @@ class Music(commands.Cog):
     async def clear_queue(self, ctx):
         vc = ctx.voice_client
         if vc:
+            await vc.stop() 
             await ctx.send(f"Clear queue now: {vc.queue}")
             vc.queue.clear()
         else:
