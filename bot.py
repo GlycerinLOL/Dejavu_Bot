@@ -1,31 +1,47 @@
 import discord
 from discord.ext import commands
+import wavelink
 import json
 import os
-import keep_alive
+import asyncio
 
 with open('setting.json', mode='r',encoding='utf8') as jfile:
-    jdata = json.load(jfile)
-bot = commands.Bot(command_prefix='$')
+    setting = json.load(jfile)
 
-@bot.event
+client = commands.Bot(command_prefix=".",intents=discord.Intents.all())
+client.owner_id = setting['owner_id']
+
+async def connect_nodes():
+        """Connect to our Lavalink nodes."""
+        await client.wait_until_ready()
+        await wavelink.NodePool.create_node(bot=client,
+                                            host='127.0.0.1',
+                                            port=2333,
+                                            password='youshallnotpass')
+
+async def load_exts():
+    for filename in os.listdir("./cmds"):
+        if filename.endswith('.py'):
+            await client.load_extension(f"cmds.{filename[:-3]}")
+
+@client.event
+async def on_wavelink_node_ready(node: wavelink.Node):
+    """Event fired when a node has finished connecting."""
+    print(f'Node: <{node.identifier}> is ready!')
+
+@client.event
 async def on_ready():
-    print('>> bot is online <<')
-@bot.event
-async def on_member_join(member):
-    channel = bot.get_channel(int(jdata['main_chat_channel']))
-    await channel.send(f'{member} join!')
-@bot.event
-async def on_member_remove(member):
-    channel = bot.get_channel(int(jdata['main_chat_channel']))
-    await channel.send(f'{member} leave!')
+    print('登入身分:',client.user)
+    await client.loop.create_task(connect_nodes())
+    status = discord.Game(setting['status'])
+    await client.change_presence(status=discord.Status.online, activity=status)
+    
 
-for filename in os.listdir('./cmds'):
-    if filename.endswith('.py'):
-      bot.load_extension(f'cmds.{filename[:-3]}')
+async def main():
+    await load_exts()
+    await client.start(setting['token'])
 
-if __name__ == "__main__":
-  keep_alive.keep_alive()
-  bot.run(jdata['token'])
+asyncio.run(main())
+    
 
 
